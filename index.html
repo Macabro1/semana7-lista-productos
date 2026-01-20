@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista Dinámica de Productos - Semana 7</title>
+    <style>
+        /* Estilos básicos para la aplicación */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #4a6ee0;
+        }
+        
+        h1 {
+            color: #4a6ee0;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4a6ee0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a5ed0;
+        }
+        
+        #resetBtn {
+            background-color: #6c757d;
+        }
+        
+        #resetBtn:hover {
+            background-color: #5a6268;
+        }
+        
+        .counter {
+            font-weight: bold;
+            color: #4a6ee0;
+        }
+        
+        .product-list-section {
+            margin-bottom: 30px;
+        }
+        
+        .product-list-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        #productListContainer {
+            margin-top: 10px;
+        }
+        
+        #productList {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .product-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+        }
+        
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        
+        .product-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .product-name {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #28a745;
+            background-color: #e8f5e9;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        .product-description {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #eee;
+        }
+        
+        .product-id {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .btn-delete {
+            padding: 5px 10px;
+            background-color: #dc3545;
+            font-size: 0.9rem;
+        }
+        
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            background-color: #fafafa;
+        }
+        
+        .empty-state h3 {
+            margin-top: 15px;
+            color: #777;
+        }
+        
+        .new-product-form {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+        
+        .new-product-form h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        #addCustomProductBtn {
+            width: 100%;
+            background-color: #28a745;
+        }
+        
+        #addCustomProductBtn:hover {
+            background-color: #218838;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links {
+            margin-top: 10px;
+        }
+        
+        .footer-links a {
+            color: #4a6ee0;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .counter {
+                text-align: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Lista Dinámica de Productos</h1>
+            <p class="subtitle">Semana 7 - Plantillas JavaScript y DOM</p>
+        </header>
+        
+        <main>
+            <div class="controls">
+                <div>
+                    <button id="addProductBtn">Agregar Producto</button>
+                    <button id="resetBtn">Restablecer Lista</button>
+                </div>
+                <div class="counter">
+                    <span id="productCount">0</span> productos en la lista
+                </div>
+            </div>
+            
+            <section class="product-list-section">
+                <h2>Catálogo de Productos</h2>
+                <div id="productListContainer">
+                    <!-- Elemento <ul> para mostrar la lista de productos -->
+                    <ul id="productList"></ul>
+                </div>
+                <div id="emptyState" class="empty-state">
+                    <h3>No hay productos para mostrar</h3>
+                    <p>Haz clic en "Agregar Producto" para comenzar</p>
+                </div>
+            </section>
+            
+            <div class="new-product-form">
+                <h3>Agregar Nuevo Producto Personalizado</h3>
+                <div class="form-group">
+                    <input type="text" id="productName" placeholder="Nombre del producto">
+                    <input type="number" id="productPrice" placeholder="Precio ($)" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <textarea id="productDescription" placeholder="Descripción del producto"></textarea>
+                </div>
+                <button id="addCustomProductBtn">Agregar Producto Personalizado</button>
+            </div>
+        </main>
+        
+        <footer>
+            <p>Tarea: Diseño de una Lista Dinámica con Plantillas Básicas en JavaScript</p>
+            <div class="footer-links">
+                <a href="https://github.com" target="_blank">Repositorio GitHub</a>
+                <a href="https://pages.github.com" target="_blank">GitHub Pages</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
